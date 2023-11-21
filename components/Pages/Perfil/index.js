@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity, ScrollView} from "react-native";
 import firebase from "../../firebase/firebaseConnection";
+import UserP from '../../img/UserP.svg';
+import Ring from '../../img/Ring.svg';
+import Wallet from '../../img/Wallet.svg';
+import Ticket from '../../img/Ticket.svg';
+import Heart from '../../img/Heart.svg';
+import Star from '../../img/Star.svg';
+import Arrow from '../../img/ArrowLeft.svg';
+import BatePapo from '../../img/BatePapo.svg';
 
 export default function Perfil() {
   const [userName, setUserName] = useState('');
@@ -28,31 +36,62 @@ export default function Perfil() {
 
   return (
     <SafeAreaView>
-      <View style={{ flexDirection: 'row' }}>
+    <ScrollView persistentScrollbar={true} showsVerticalScrollIndicator={false}>
+      <View>
         <TouchableOpacity>
-          <Image
-            source={require("../../img/SemFoto.png")}
-            style={styles.semFoto}
-          />
+          <UserP style={{ alignSelf: 'center', top: 45 }}/>
         </TouchableOpacity>
-        <Text style={{ fontSize: 20, fontFamily: 'Segoe UI Bold', top: 66, left: 60 }}>{userName}</Text>
+        <Text style={{ fontSize: 20, fontFamily: 'Segoe UI Bold', top: 66, left: 177 }}>{userName}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', top: 30}}>
+        <TouchableOpacity style={styles.btns}>
+          <BatePapo style={styles.icons} />
+          <Text style={styles.textBtn}>Conversas</Text>
+          <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Histórico de conversas</Text>
+        </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.btns}>
-        <Text style={styles.textBtn}>Editar Perfil:</Text>
+        <Ring style={styles.icons} />
+        <Text style={styles.textBtn}>Notificações</Text>
+        <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Central de Notificações</Text>
       </TouchableOpacity>
-      <View style={styles.linha}></View>
+
       <TouchableOpacity style={styles.btns}>
-        <Text style={styles.textBtn}>Histórico de Compras</Text>
+        <Wallet style={styles.icons} />
+        <Text style={styles.textBtn}>Pagamentos</Text>
+        <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Saldos e Cartões</Text>
       </TouchableOpacity>
-      <View style={styles.linha}></View>
+
       <TouchableOpacity style={styles.btns}>
-        <Text style={styles.textBtn}>Rastreamento</Text>
+        <Ticket style={styles.icons} />
+        <Text style={styles.textBtn}>Cupons</Text>
+        <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Cupons de Descontos</Text>
       </TouchableOpacity>
-      <View style={styles.linha}></View>
+
       <TouchableOpacity style={styles.btns}>
-        <Text style={styles.textBtn}>Mudar para Produtor</Text>
+        <Star style={styles.icons} />
+        <Text style={styles.textBtn}>Fidelidade</Text>
+        <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Minhas Fidelidades</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+
+      <TouchableOpacity style={styles.btns}>
+        <Heart style={styles.icons} />
+        <Text style={styles.textBtn}>Favoritos</Text>
+        <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Locais Favoritos</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.btns}>
+        <Text></Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={styles.btns}>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      </TouchableOpacity>
+    </ScrollView>
+  </SafeAreaView>
   )
 }
 
@@ -66,20 +105,18 @@ const styles = StyleSheet.create({
     left: 33,
     top: 39
   },
-  linha: {
-    height: 1,
-    width: 329,
-    backgroundColor: 'black',
-    top: 120,
-    left: 40
-  },
   textBtn: {
     fontSize: 20,
     fontFamily: 'Segoe UI Bold',
-    padding: 30,
+    marginLeft: 70,
+    top: -80
   },
   btns: {
     top: 120,
-    left: 40
+    left: 40,
+  },
+  icons: {
+    marginBottom: 10,
+    top: -24
   }
 })
