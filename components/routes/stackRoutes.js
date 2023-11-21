@@ -8,13 +8,14 @@ import Entrar from '../Pages/Entrar';
 import Home from '../Pages/Home';
 import Cadastro from '../Pages/Cadastro';
 import Login from '../Pages/Login';
-import Rastrear from '../Pages/Rastreamento';
+import Rastrear from '../Pages/Explorar';
 import Perfil from '../Pages/Perfil';
 import PreCadastro from '../Pages/PreCadastro';
 import CadastroLoja from '../Pages/CadastroLoja';
 import IconB from '../img/BatePapo.svg';
 import User from '../img/User';
 import Lupa from '../img/Lupa';
+import Explorar from '../Pages/Explorar';
 
 // Cria uma instância do TabNavigator
 const Tab = createBottomTabNavigator();
@@ -86,8 +87,8 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Rastrear"
-        component={Rastrear}
+        name="Explorar"
+        component={Explorar}
         options={{
           title: 'Explorar',
           tabBarIcon: ({ color, size }) => {
