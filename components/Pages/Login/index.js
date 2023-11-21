@@ -8,6 +8,7 @@ import firebase from "../../firebase/firebaseConnection";
 import Eye from '../../img/eye.svg';
 import Eyeoff from '../../img/eye-off.svg';
 import SetaEP from '../../img/SetaEP.svg';
+import Arrow from '../../img/ArrowLeft.svg';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -70,6 +71,9 @@ export default function Login() {
   return (
     <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate('Entrar')}>
+                    <Arrow style={{ top: -40, left: -180}} />
+                </TouchableOpacity>
         <TouchableOpacity>
           <SetaEP style={{ color: '#000', height: 100 }} />
         </TouchableOpacity>

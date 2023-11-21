@@ -15,6 +15,7 @@ import { Platform } from 'react-native'
 import * as AppleAuthentication from 'expo-apple-authentication'
 import Eye from '../../img/eye.svg';
 import Eyeoff from '../../img/eye-off.svg';
+import Arrow from '../../img/ArrowLeft.svg';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -169,6 +170,9 @@ export default function Cadastro() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.navigate('PreCadastro')}>
+          <Arrow style={{top: -50, left: -180}}/>
+        </TouchableOpacity>
         <Logo style={{ top: -70 }} />
         <TextInput
           placeholder="Digite seu nome"
@@ -223,7 +227,7 @@ export default function Cadastro() {
         <TouchableOpacity style={styles.btnsetaR} onPress={navegarParaHome}>
           <Text style={{ fontSize: 20, fontFamily: 'Segoe UI Bold', color: 'white' }}>Cadastrar</Text>
         </TouchableOpacity>
-        <Text style={{ top: 75, fontSize: 15, color: 'grey', top: 70 }}>®Flex</Text>
+        <Text style={{ fontSize: 15, color: 'grey', top: 50 }}>®Flex</Text>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

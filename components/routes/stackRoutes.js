@@ -10,6 +10,11 @@ import Cadastro from '../Pages/Cadastro';
 import Login from '../Pages/Login';
 import Rastrear from '../Pages/Rastreamento';
 import Perfil from '../Pages/Perfil';
+import PreCadastro from '../Pages/PreCadastro';
+import CadastroLoja from '../Pages/CadastroLoja';
+import IconB from '../img/BatePapo.svg';
+import User from '../img/User';
+import Lupa from '../img/Lupa';
 
 // Cria uma instância do TabNavigator
 const Tab = createBottomTabNavigator();
@@ -38,6 +43,8 @@ function StackRoutes(){
         <Stack.Screen name="Entrar" component={Entrar} options={{ headerShown: false }} />
         <Stack.Screen name="Cadastro" component={Cadastro} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+        <Stack.Screen name="PreCadastro" component={PreCadastro} options={{ headerShown: false }} />
+        <Stack.Screen name="CadastroLoja" component={CadastroLoja} options={{ headerShown: false }} />
       </Stack.Navigator>
   );
 }
@@ -50,19 +57,21 @@ function TabNavigator() {
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: true,
-        tabBarActiveTintColor: '#FFF',
+        tabBarActiveTintColor: '#000',
         tabBarInactiveTintColor: '#000',
         tabBarLabelStyle: {
           fontSize: 12,
+          marginTop: 5
         },
         tabBarStyle: {
-          backgroundColor: '#25985C',
-          borderTopWidth: 0,
-          height: 65,
-          width: 380,
+          backgroundColor: '#f7f7f7',
+          height: 90,
+          width: 460,
           alignSelf: 'center',
           borderRadius: 30,
-          marginBottom: 10
+          marginBottom: 10,
+          borderTopColor: '#000',
+          borderTopWidth: 1
         },
       }}
     >
@@ -70,9 +79,9 @@ function TabNavigator() {
         name="Home"
         component={Home}
         options={{
-          title: '',
+          title: 'Conversas',
           tabBarIcon: ({ color, size }) => {
-            return <Feather name="home" color={color} size={40} style={{justifyContent: 'center', top: 25, height: 50}} />;
+            return <IconB/>;
           },
         }}
       />
@@ -80,9 +89,9 @@ function TabNavigator() {
         name="Rastrear"
         component={Rastrear}
         options={{
-          title: '',
+          title: 'Explorar',
           tabBarIcon: ({ color, size }) => {
-            return <Feather name="truck" color={color} size={40} style={{justifyContent: 'center', top: 25, height: 50}} />;
+            return <Lupa/>;
           },
         }}
       />
@@ -90,9 +99,9 @@ function TabNavigator() {
         name="Perfil"
         component={Perfil}
         options={{
-          title: '',
+          title: 'Perfil',
           tabBarIcon: ({ color, size }) => {
-            return <Feather name="user" color={color} size={40} style={{justifyContent: 'center', top: 25, height: 50}} />;
+            return <User style={{marginTop: 5}}/>;
           },
         }}
       />

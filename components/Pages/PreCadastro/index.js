@@ -2,20 +2,25 @@ import React from "react";
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Logo from '../../img/LogoFlex.svg';
 import { useNavigation } from "@react-navigation/native";
+import Cadastro from "../Cadastro";
+import Arrow from '../../img/ArrowLeft.svg';
 
-export default function Entrar() {
+export default function PreCadastro() {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      {/* Botão para navegar para a tela de login */}
-      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.textBtn}>Fazer Login</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Entrar')}>
+        <Arrow style={{top: 50, left: 30}}/>
+        </TouchableOpacity>
+        {/* Botão para navegar para a tela de cadastro Cliente*/}
+      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Cadastro')}>
+        <Text style={styles.textBtn}>Cadastro Cliente</Text>
       </TouchableOpacity>
 
-      {/* Botão para navegar para a tela de cadastro */}
-      <TouchableOpacity style={styles.btn2} onPress={() => navigation.navigate('PreCadastro')}>
-        <Text style={styles.textBtn2}>Fazer Cadastro</Text>
+      {/* Botão para navegar para a tela de cadastro Loja*/}
+      <TouchableOpacity style={styles.btn2} onPress={() => navigation.navigate('CadastroLoja')}>
+        <Text style={styles.textBtn2}>Cadastro Loja</Text>
       </TouchableOpacity>
 
       {/* Componente de logotipo */}
