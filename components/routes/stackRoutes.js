@@ -16,6 +16,7 @@ import User from '../img/User';
 import Lupa from '../img/Lupa';
 import Explorar from '../Pages/Explorar';
 import Conversas from '../Pages/Conversas';
+import Carrinho from '../Pages/Carrinho';
 
 // Cria uma instância do TabNavigator
 const Tab = createBottomTabNavigator();
@@ -46,6 +47,7 @@ function StackRoutes(){
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="PreCadastro" component={PreCadastro} options={{ headerShown: false }} />
         <Stack.Screen name="CadastroLoja" component={CadastroLoja} options={{ headerShown: false }} />
+        <Stack.Screen name="Carrinho" component={Carrinho} options={{ headerShown: false }} />
       </Stack.Navigator>
   );
 }

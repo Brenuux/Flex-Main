@@ -17,7 +17,7 @@ export default function Explorar() {
         <SafeAreaView>
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                 <Text style={{ fontSize: 30, left: 170, fontFamily: 'Segoe UI Bold' }}>FLEX</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Carrinho')}>
                     <Cart style={{ left: 260 }} />
                 </TouchableOpacity>
             </View>
