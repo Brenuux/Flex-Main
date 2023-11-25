@@ -9,7 +9,6 @@ import SetaR from '../../img/SetaR.svg';
 import Gicon from '../../img/google-icon.svg';
 import Logo from '../../img/LogoFlex.svg';
 import firebase from "../../firebase/firebaseConnection";
-import Home from "../Home";
 import Login from "../Login";
 import { Platform } from 'react-native'
 import * as AppleAuthentication from 'expo-apple-authentication'

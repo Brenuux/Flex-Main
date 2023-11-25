@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feather from 'react-native-vector-icons/Feather';
 import Loading from '../Pages/Loading';
 import Entrar from '../Pages/Entrar';
-import Home from '../Pages/Home';
 import Cadastro from '../Pages/Cadastro';
 import Login from '../Pages/Login';
 import Rastrear from '../Pages/Explorar';

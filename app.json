@@ -19,12 +19,21 @@
       "**/*"
     ],
     "ios": {
+      "infoPlist": {
+        "NSCameraUsageDescription": "Precisamos da sua permissão para acessar a câmera",
+        "NSPhotoLibraryUsageDescription": "Precisamos da sua permissão para acessar a galeria de fotos"
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.heitor.flex",
       "usesAppleSignIn": true
     },
     "android": {
       "package": "com.heitor.flex",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
