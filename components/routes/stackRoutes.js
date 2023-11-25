@@ -16,6 +16,7 @@ import IconB from '../img/BatePapo.svg';
 import User from '../img/User';
 import Lupa from '../img/Lupa';
 import Explorar from '../Pages/Explorar';
+import Conversas from '../Pages/Conversas';
 
 // Cria uma instância do TabNavigator
 const Tab = createBottomTabNavigator();
@@ -78,7 +79,7 @@ function TabNavigator() {
     >
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={Conversas}
         options={{
           title: 'Conversas',
           tabBarIcon: ({ color, size }) => {
