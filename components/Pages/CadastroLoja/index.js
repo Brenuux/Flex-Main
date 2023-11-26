@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import * as Facebook from 'expo-auth-session/providers/facebook';
-import { View, TouchableOpacity, Text, StyleSheet, TextInput, SafeAreaView, Alert, TouchableWithoutFeedback, Keyboard, Image } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet, TextInput, SafeAreaView, Alert, TouchableWithoutFeedback, Keyboard, Image, Modal } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Feather from 'react-native-vector-icons/FontAwesome';
 import SetaR from '../../img/SetaR.svg';
@@ -15,6 +15,8 @@ import * as AppleAuthentication from 'expo-apple-authentication'
 import Eye from '../../img/eye.svg';
 import Eyeoff from '../../img/eye-off.svg';
 import Arrow from '../../img/ArrowLeft.svg';
+import Verificado from "../../img/Verificado.svg";
+import ArrowD from "../../img/ArrowD.svg";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -65,6 +67,7 @@ export function Auth() {
 }
 
 export default function CadastroLoja() {
+    const [modalVisible, setModalVisible] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [accesToken, setAcessToken] = useState(null);
     const [request2, response2, promptAsync2] = Facebook.useAuthRequest({
@@ -80,6 +83,22 @@ export default function CadastroLoja() {
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const categories = [
+        "Lanches",
+        "Farmácia",
+        "Saúde & Bem-estar",
+        "Casa de Construção",
+        "Outros",
+    ];
+
+    const toggleCategory = (category) => {
+        if (selectedCategories.includes(category)) {
+            setSelectedCategories(selectedCategories.filter((c) => c !== category));
+        } else {
+            setSelectedCategories([...selectedCategories, category]);
+        }
+    };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -124,10 +143,17 @@ export default function CadastroLoja() {
     }
 
     async function navegarParaHome() {
+        if (selectedCategories.length === 0) {
+            alert('Selecione pelo menos uma categoria para a loja.');
+            return;
+        }
+
         await firebase.auth().createUserWithEmailAndPassword(email, pass)
             .then((value) => {
-                firebase.database().ref('lojas').child(value.user.uid).set({
-                    nome: nome
+                const userId = value.user.uid;
+                firebase.database().ref('lojas').child(userId).set({
+                    nome: nome,
+                    categoria: selectedCategories.join(', '), // Salva as categorias como uma string separada por vírgula
                 })
                 navigation.navigate('SecondTabNavigator')
                 alert('Conta Cadastrada com Sucesso!')
@@ -170,7 +196,7 @@ export default function CadastroLoja() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={styles.container}>
                 <TouchableOpacity onPress={() => navigation.navigate('PreCadastro')}>
-                    <Arrow style={{ top: -40, left: -180}} />
+                    <Arrow style={{ top: -40, left: -180 }} />
                 </TouchableOpacity>
                 <Logo style={{ top: -70 }} />
                 <TextInput
@@ -203,6 +229,59 @@ export default function CadastroLoja() {
                         <Eyeoff name="eye" size={24} color="black" style={{ top: -81, left: 130 }} />
                     )}
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={{
+                        flexDirection: "row",
+                        width: 325,
+                        height: 51,
+                        borderWidth: 1,
+                        backgroundColor: "#828282",
+                        alignSelf: "center",
+                        top: -49,
+                    }}
+                    onPress={() => setModalVisible(true)}
+                >
+                    <Text style={{ color: "#C5C5C5", fontSize: 16, top: 13, left: 10 }}>
+                        Categoria
+                    </Text>
+                    <ArrowD style={{ top: 17, left: 210 }} />
+                </TouchableOpacity>
+                <Modal
+                    transparent={true}
+                    animationType="slide"
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            {categories.map((category, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={[
+                                        styles.categoryButton,
+                                        {
+                                            backgroundColor: selectedCategories.includes(category)
+                                                ? "#000000"
+                                                : "#828282",
+                                        },
+                                    ]}
+                                    onPress={() => toggleCategory(category)}
+                                >
+                                    <Text style={{ color: "#FFFFFF" }}>{category}</Text>
+                                    {selectedCategories.includes(category) && (
+                                        <Verificado style={{ marginLeft: 10 }} />
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                            <TouchableOpacity
+                                style={styles.closeButton}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={{ color: "#000000", fontSize: 18 }}>Fechar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
                 <View style={styles.linha}></View>
                 <View style={styles.iconButtonsContainer}>
                     <TouchableOpacity style={styles.iconButton} onPress={() => {
@@ -226,7 +305,7 @@ export default function CadastroLoja() {
                 <TouchableOpacity style={styles.btnsetaR} onPress={navegarParaHome}>
                     <Text style={{ fontSize: 20, fontFamily: 'Segoe UI Bold', color: 'white' }}>Cadastrar</Text>
                 </TouchableOpacity>
-                <Text style={{ top: 50, fontSize: 15, color: 'grey'}}>®Flex</Text>
+                <Text style={{ top: 50, fontSize: 15, color: 'grey' }}>®Flex</Text>
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
@@ -286,5 +365,33 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         top: -10,
         borderRadius: 25
-    }
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: "flex-end",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+        backgroundColor: "#FFFFFF",
+        width: "100%",
+        padding: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
+    categoryButton: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: 10,
+        marginBottom: 10,
+        borderRadius: 10,
+    },
+    closeButton: {
+        backgroundColor: "#FFFFFF",
+        padding: 10,
+        alignItems: "center",
+        borderRadius: 10,
+        marginTop: 10,
+    },
 });

@@ -29,11 +29,13 @@ import Menu from '../../img/Menu.svg';
 export default function PerfilLoja() {
     const [userName, setUserName] = useState("");
     const [userImage, setUserImage] = useState(null);
+    const [categories, setCategories] = useState([]);
     const navigation = useNavigation();
 
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
             if (user) {
+                // Recupere o nome da loja
                 firebase
                     .database()
                     .ref(`lojas/${user.uid}/nome`)
@@ -44,6 +46,21 @@ export default function PerfilLoja() {
                     })
                     .catch((error) => {
                         console.error("Erro ao recuperar o nome da Loja:", error);
+                    });
+
+                // Recupere as categorias da loja
+                firebase
+                    .database()
+                    .ref(`lojas/${user.uid}/categoria`)
+                    .once("value")
+                    .then((snapshot) => {
+                        const categorias = snapshot.val();
+                        if (categorias) {
+                            setCategories(categorias.split(', ')); // Divida a string em um array de categorias
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Erro ao recuperar as categorias da Loja:", error);
                     });
             }
         });
@@ -59,7 +76,7 @@ export default function PerfilLoja() {
             quality: 1,
         });
 
-        if (!result.cancelled) {
+        if (!result.canceled) {
             setUserImage(result.uri);
             uploadImage(result.uri);
         }
@@ -70,7 +87,7 @@ export default function PerfilLoja() {
         const blob = await response.blob();
 
         const user = firebase.auth().currentUser;
-        const storageRef = firebase.storage().ref(`usuarios/${user.uid}/profile.jpg`);
+        const storageRef = firebase.storage().ref(`lojas/${user.uid}/profile.jpg`);
 
         storageRef.put(blob).then(() => {
             console.log("Imagem enviada com sucesso!");
@@ -96,6 +113,7 @@ export default function PerfilLoja() {
                             <UserP style={{ alignSelf: "center", top: 45 }} />
                         )}
                     </TouchableOpacity>
+                    <View>
                     <Text
                         style={{
                             fontSize: 20,
@@ -106,24 +124,30 @@ export default function PerfilLoja() {
                     >
                         {userName}
                     </Text>
+                    {categories.length > 0 && (
+                        <Text style={{ fontSize: 16, fontFamily: 'Segoe UI', alignSelf: 'center', top: 70}}>
+                            Categorias: {categories.join(', ')}
+                        </Text>
+                    )}
+                </View>
                 </View>
                 <View style={{ top: 40 }}>
-                <TouchableOpacity style={styles.btns} onPress={() => navigation.navigate('ConversasLoja')}>
-                    
+                    <TouchableOpacity style={styles.btns} onPress={() => navigation.navigate('ConversasLoja')}>
+
                         <BatePapo style={styles.icons} />
                         <Text style={styles.textBtn}>Conversas</Text>
                         <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Histórico de conversas</Text>
-                   
-                </TouchableOpacity>
+
+                    </TouchableOpacity>
                 </View>
                 <View style={{ top: 10 }}>
-                <TouchableOpacity style={styles.btns}>
-                    
+                    <TouchableOpacity style={styles.btns}>
+
                         <Ring style={styles.icons} />
                         <Text style={styles.textBtn}>Notificações</Text>
                         <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Central de Notificações</Text>
-                    
-                </TouchableOpacity>
+
+                    </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row', top: -10 }}>
                     <TouchableOpacity style={styles.btns}>
@@ -132,31 +156,20 @@ export default function PerfilLoja() {
                         <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Estoque compras e vendas</Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.btns}>
-                    <View style={{ top: -30 }}>
+                <View style={{ top: -30 }}>
+                    <TouchableOpacity style={styles.btns} onPress={() => navigation.navigate('Gerencia')}>
+
                         <Document style={styles.icons} />
                         <Text style={styles.textBtn}>Relatório</Text>
                         <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Relatório de vendas</Text>
-                    </View>
-                </TouchableOpacity>
-                <View style={{ top: -55}}>
-                <TouchableOpacity style={[styles.btns]}>
-                   
-                        <Menu style={styles.icons} />
-                        <Text style={styles.textBtn}>Dados</Text>
-                        <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>informações funcionários</Text>
-                </TouchableOpacity>
-                </View>
-                <TouchableOpacity style={styles.btns}>
-                    <Text></Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity style={styles.btns}>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ top: 65, left: 40 }}>
+                    <Menu style={styles.icons} />
+                    <Text style={styles.textBtn}>Dados</Text>
+                    <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>informações funcionários</Text>
+                </View>
             </ScrollView>
         </SafeAreaView>
     )

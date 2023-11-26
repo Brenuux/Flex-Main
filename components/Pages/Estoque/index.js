@@ -20,7 +20,9 @@ export default function Estoque() {
                 Adições Recentes
             </Text>
             <View style={[styles.line, {top: 150}]}></View>
-            <Add style={{top: 150, left: 340}}/>
+            <TouchableOpacity onPress={() => navigation.navigate('Produto')}>
+                <Add style={{top: 150, left: 340}}/>
+            </TouchableOpacity>
         </SafeAreaView>
     )
 }
