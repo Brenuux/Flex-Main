@@ -21,6 +21,7 @@ import PerfilLoja from '../Pages/PerfilLoja';
 import ConversasLoja from '../Pages/ConversasLoja';
 import Wallet from '../img/Wallett.svg';
 import Vendas from '../Pages/Vendas';
+import Produto from '../Pages/Produto';
 
 // Cria uma instância do TabNavigator
 const Tab = createBottomTabNavigator();
@@ -54,6 +55,7 @@ function StackRoutes() {
       <Stack.Screen name="PreCadastro" component={PreCadastro} options={{ headerShown: false }} />
       <Stack.Screen name="CadastroLoja" component={CadastroLoja} options={{ headerShown: false }} />
       <Stack.Screen name="Carrinho" component={Carrinho} options={{ headerShown: false }} />
+      <Stack.Screen name="Produto" component={Produto} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
