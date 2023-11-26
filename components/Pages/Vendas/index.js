@@ -3,16 +3,18 @@ import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet} from "react-nat
 import Add from '../../img/Add.svg';
 import Bag from '../../img/Bag.svg';
 import Tick from '../../img/Tick.svg';
+import { useNavigation } from "@react-navigation/native";
 
 
 
 export default function Vendas(){
+    const navigation = useNavigation();
     return(
         <SafeAreaView>
             <Text style={{ fontSize: 30, left: 175, fontFamily: 'Segoe UI Bold' }}>FLEX</Text>
             <View style={styles.line}></View>
             <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Produto')}>
                     <Add style={{top: 145, marginLeft: 25}}/>
                     <Text style={{top: 108, left: 100, fontSize: 20, fontWeight: 'bold', fontFamily: 'Segoe UI Bold'}}>Cadastro de Itens</Text>
                 </TouchableOpacity>
