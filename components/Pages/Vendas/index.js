@@ -20,13 +20,13 @@ export default function Vendas(){
                 </TouchableOpacity>
             </View>
             <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Estoque')}>
                     <Bag style={{top: 149, marginLeft: 23}}/>
                     <Text style={{top: 112, left: 100, fontSize: 20, fontWeight: 'bold', fontFamily: 'Segoe UI Bold'}}>Estoque</Text>
                 </TouchableOpacity>
             </View>
             <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Estoque')}>
                     <Tick style={{top: 149, marginLeft: 23}}/>
                     <Text style={{top: 112, left: 100, fontSize: 20, fontWeight: 'bold', fontFamily: 'Segoe UI Bold'}}>Itens Cadastrados</Text>
                 </TouchableOpacity>
