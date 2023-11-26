@@ -39,13 +39,13 @@ const styles = StyleSheet.create({
         top: 45,
         left: -10
     },
-    // Adicione os estilos para o botão
+    
     button: {
         width: 151,
         height: 30,
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: 'black',  // Altere para a cor desejada
+        borderColor: 'black', 
         alignSelf: 'center',
         marginTop: 20,
         justifyContent: 'center',
@@ -55,6 +55,6 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 16,
-        color: 'white',  // Altere para a cor desejada
+        color: 'white', 
     }
 });

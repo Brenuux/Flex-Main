@@ -129,7 +129,7 @@ export default function CadastroLoja() {
                 firebase.database().ref('lojas').child(value.user.uid).set({
                     nome: nome
                 })
-                navigation.navigate('Login')
+                navigation.navigate('SecondTabNavigator')
                 alert('Conta Cadastrada com Sucesso!')
             })
             .catch((error) => {

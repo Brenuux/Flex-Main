@@ -48,9 +48,26 @@ export default function Login() {
     await firebase
       .auth()
       .signInWithEmailAndPassword(email, pass)
-      .then(() => {
-        alert(`Bem-vindo: ${userName}`);
-        navigation.navigate('TabNavigator');
+      .then((userCredential) => {
+        const user = userCredential.user;
+
+        // Verifica se o UID pertence a um cliente
+        firebase.database().ref(`usuarios/${user.uid}`).once('value')
+          .then((snapshot) => {
+            const isCliente = snapshot.exists();
+
+            // Navega para o TabNavigator ou SecondTabNavigator com base no tipo de usuário
+            if (isCliente) {
+              alert(`Bem-vindo Cliente: ${userName}`);
+              navigation.navigate('TabNavigator');
+            } else {
+              alert(`Bem-vindo Loja: ${userName}`);
+              navigation.navigate('SecondTabNavigator');
+            }
+          })
+          .catch((error) => {
+            console.error('Erro ao verificar o tipo de usuário:', error);
+          });
       })
       .catch((error) => {
         if (error.code === 'auth/weak-password') {
@@ -66,14 +83,14 @@ export default function Login() {
           return;
         }
       })
-  };
+  }
 
   return (
     <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('Entrar')}>
-                    <Arrow style={{ top: -40, left: -180}} />
-                </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Entrar')}>
+          <Arrow style={{ top: -40, left: -180 }} />
+        </TouchableOpacity>
         <TouchableOpacity>
           <SetaEP style={{ color: '#000', height: 100 }} />
         </TouchableOpacity>
@@ -96,9 +113,9 @@ export default function Login() {
         />
         <TouchableOpacity onPress={togglePasswordVisibility}>
           {showPassword ? (
-            <Eye  size={24} color="black" style={{top: -90, left: 130}}/>
+            <Eye size={24} color="black" style={{ top: -90, left: 130 }} />
           ) : (
-            <Eyeoff name="eye" size={24} color="black" style={{top: -90, left: 130}}/>
+            <Eyeoff name="eye" size={24} color="black" style={{ top: -90, left: 130 }} />
           )}
         </TouchableOpacity>
         <View style={styles.linha}></View>
