@@ -22,6 +22,8 @@ import ConversasLoja from '../Pages/ConversasLoja';
 import Wallet from '../img/Wallett.svg';
 import Vendas from '../Pages/Vendas';
 import Produto from '../Pages/Produto';
+import Estoque from '../Pages/Estoque';
+import Gerencia from '../Pages/Gerencia';
 
 // Cria uma instância do TabNavigator
 const Tab = createBottomTabNavigator();
@@ -56,6 +58,8 @@ function StackRoutes() {
       <Stack.Screen name="CadastroLoja" component={CadastroLoja} options={{ headerShown: false }} />
       <Stack.Screen name="Carrinho" component={Carrinho} options={{ headerShown: false }} />
       <Stack.Screen name="Produto" component={Produto} options={{ headerShown: false }} />
+      <Stack.Screen name="Estoque" component={Estoque} options={{ headerShown: false }} />
+      <Stack.Screen name="Gerencia" component={Gerencia} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

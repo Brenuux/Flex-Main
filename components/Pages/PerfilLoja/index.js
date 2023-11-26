@@ -107,22 +107,24 @@ export default function PerfilLoja() {
                         {userName}
                     </Text>
                 </View>
+                <View style={{ top: 40 }}>
                 <TouchableOpacity style={styles.btns} onPress={() => navigation.navigate('ConversasLoja')}>
-                    <View style={{ top: 40 }}>
+                    
                         <BatePapo style={styles.icons} />
                         <Text style={styles.textBtn}>Conversas</Text>
                         <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Histórico de conversas</Text>
-                    </View>
+                   
                 </TouchableOpacity>
-
+                </View>
+                <View style={{ top: 10 }}>
                 <TouchableOpacity style={styles.btns}>
-                    <View style={{ top: 10 }}>
+                    
                         <Ring style={styles.icons} />
                         <Text style={styles.textBtn}>Notificações</Text>
                         <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Central de Notificações</Text>
-                    </View>
+                    
                 </TouchableOpacity>
-
+                </View>
                 <View style={{ flexDirection: 'row', top: -10 }}>
                     <TouchableOpacity style={styles.btns}>
                         <Bag style={styles.icons} />
@@ -137,8 +139,8 @@ export default function PerfilLoja() {
                         <Text style={[styles.textBtn, { marginTop: 10, fontFamily: 'Segoe UI', fontSize: 16 }]}>Relatório de vendas</Text>
                     </View>
                 </TouchableOpacity>
-                <View style={{ top: -55 }}>
-                <TouchableOpacity style={styles.btns}>
+                <View style={{ top: -55}}>
+                <TouchableOpacity style={[styles.btns]}>
                    
                         <Menu style={styles.icons} />
                         <Text style={styles.textBtn}>Dados</Text>
