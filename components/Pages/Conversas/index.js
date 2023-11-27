@@ -80,7 +80,7 @@ export default function Conversas() {
                                 data={lojas}
                                 keyExtractor={(item) => item.uid}
                                 renderItem={({ item }) => (
-                                    <TouchableOpacity onPress={() => handleLojaPress(item.nome, item.uid)}>
+                                    <TouchableOpacity onPress={() => handleLojaPress(item.nome, item.uid) &&  setModalVisible(false)}>
                                         <Text style={{ fontSize: 18, textAlign: 'center', marginTop: 35, fontWeight: 'bold' }}>{item.nome}</Text>
                                         <Text style={{ fontSize: 16, textAlign: 'center', marginTop: 5 }}>{item.categoria}</Text>
                                     </TouchableOpacity>
