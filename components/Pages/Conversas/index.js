@@ -25,18 +25,33 @@ export default function Conversas() {
                 lojasArray.push(data);
             });
 
+            console.log("Lojas carregadas:", lojasArray); // Adicione este log
             setLojas(lojasArray);
+            console.log("Lojas atualizadas:", lojas); // Adicione este log
         } catch (error) {
             console.error("Erro ao carregar lojas:", error);
         }
     };
 
     const handleLojaPress = (nome, uidLoja) => {
-        // Navegar para o componente de bate-papo com o nome da loja e o UID como parâmetros
-        navigation.navigate('BatePapo', { nomeLoja: nome, uidLoja: uidLoja });
-        // Fechar o modal
-        console.log(uidLoja);
-        setModalVisible(false);
+        console.log("UID da loja:", uidLoja); // Adicione este log
+        if (uidLoja) {
+            // Navegar para o componente de bate-papo com o nome da loja e o UID como parâmetros
+            navigation.navigate('BatePapo', { nomeLoja: nome, uidLoja: uidLoja });
+            // Fechar o modal
+            setModalVisible(false);
+
+            // Conectar ao socket da loja ao selecionar uma loja
+            const socketLoja = io('http://localhost:3000');
+            socketLoja.emit('lojaConectada', uidLoja);
+
+            // Adicionar um ouvinte para receber mensagens da loja
+            socketLoja.on('mensagemCliente', (mensagem) => {
+                // Lógica para lidar com mensagens da loja para o cliente
+            });
+        } else {
+            console.error("UID da loja não definido.");
+        }
     };
 
     return (
@@ -61,7 +76,7 @@ export default function Conversas() {
                             <Text style={{ fontSize: 24, textAlign: 'center', marginTop: 20 }}>Escolha uma loja</Text>
                             <FlatList
                                 data={lojas}
-                                keyExtractor={(item) => item.uid}
+                                keyExtractor={(item, index) => index.toString()} // Alteração nesta linha
                                 renderItem={({ item }) => (
                                     <TouchableOpacity onPress={() => handleLojaPress(item.nome, item.uid)}>
                                         <Text style={{ fontSize: 18, textAlign: 'center', marginTop: 35, fontWeight: 'bold' }}>{item.nome}</Text>
@@ -70,7 +85,7 @@ export default function Conversas() {
                                 )}
                             />
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                <Arrow style={{ top: -110 }} />
+                                <Arrow style={{ top: -110, left: 20 }} />
                             </TouchableOpacity>
                         </View>
                     </SafeAreaView>
