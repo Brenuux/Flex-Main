@@ -8,15 +8,11 @@ import {
     StyleSheet,
     SafeAreaView,
     ScrollView,
-    Image,
 } from "react-native";
 import Arrow from "../../img/ArrowLeft.svg";
 import { useNavigation } from "@react-navigation/native";
-import Img from "../../img/Img.svg";
-import ArrowD from "../../img/ArrowD.svg";
 import Verificado from "../../img/Verificado.svg";
 import firebase from "firebase";
-import * as ImagePicker from "expo-image-picker";
 
 export default function Produto() {
     const navigation = useNavigation();
@@ -25,7 +21,6 @@ export default function Produto() {
     const [descricaoProduto, setDescricaoProduto] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [imageUri, setImageUri] = useState(null);
 
     const categories = [
         "Lanches",
@@ -40,23 +35,6 @@ export default function Produto() {
             setSelectedCategories(selectedCategories.filter((c) => c !== category));
         } else {
             setSelectedCategories([...selectedCategories, category]);
-        }
-    };
-
-    const pickImage = async () => {
-        try {
-            const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-            });
-
-            if (!result.cancelled) {
-                setImageUri(result.uri);
-            }
-        } catch (error) {
-            console.error("Erro ao selecionar a imagem:", error);
         }
     };
 
@@ -75,15 +53,7 @@ export default function Produto() {
             const produtosRef = lojasRef.child("produtos");
 
             // Cria um novo produto com os dados fornecidos
-            const novoProdutoRef = produtosRef.push();
-
-            // Upload da imagem para o Firebase Storage
-            const storage = firebase.storage();
-            const imageRef = storage.ref(`imagens/${uid}/${novoProdutoRef.key}`);
-            const response = await fetch(imageUri);
-            const blob = await response.blob();
-            await imageRef.put(blob);
-            const imageUrl = await imageRef.getDownloadURL();
+            const novoProdutoRef = produtosRef.child(nomeProduto);
 
             // Salva os dados do produto no Realtime Database
             await novoProdutoRef.set({
@@ -91,7 +61,6 @@ export default function Produto() {
                 preco: precoProduto,
                 descricao: descricaoProduto,
                 categorias: selectedCategories,
-                imagemUrl: imageUrl,
             });
 
             // Limpa os campos após o cadastro
@@ -99,7 +68,6 @@ export default function Produto() {
             setPrecoProduto("");
             setDescricaoProduto("");
             setSelectedCategories([]);
-            setImageUri(null);
 
             // Fecha o modal
             setModalVisible(false);
@@ -124,24 +92,6 @@ export default function Produto() {
                         Novo produto
                     </Text>
                 </View>
-
-                <TouchableOpacity style={styles.btn1} onPress={pickImage}>
-                    {imageUri ? (
-                        <Image
-                            source={{ uri: imageUri }}
-                            style={{ width: "100%", height: "100%", borderRadius: 10 }}
-                        />
-                    ) : (
-                        <>
-                            <Img style={{ alignSelf: "center", top: 50 }} />
-                            <Text
-                                style={{ alignSelf: "center", color: "#C5C5C5", top: 60 }}
-                            >
-                                Adicionar fotos
-                            </Text>
-                        </>
-                    )}
-                </TouchableOpacity>
 
                 {/* Nome do Produto */}
                 <TextInput
@@ -176,7 +126,6 @@ export default function Produto() {
                     <Text style={{ color: "#C5C5C5", fontSize: 16, top: 13, left: 10 }}>
                         Categoria
                     </Text>
-                    <ArrowD style={{ top: 17, left: 210 }} />
                 </TouchableOpacity>
 
                 {/* Descrição do Produto */}
@@ -239,15 +188,6 @@ export default function Produto() {
 }
 
 const styles = StyleSheet.create({
-    btn1: {
-        width: 325,
-        height: 177,
-        borderRadius: 10,
-        borderWidth: 1,
-        backgroundColor: "#828282",
-        alignSelf: "center",
-        top: 40,
-    },
     input: {
         width: 325,
         height: 51,
