@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, StyleSheet, Modal, FlatList} from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity, TextInput, StyleSheet, Modal, FlatList } from "react-native";
 import Cart from '../../img/Cart.svg';
 import Lupa from '../../img/LupaCinza.svg';
 import { useNavigation } from "@react-navigation/native";
@@ -10,8 +10,49 @@ import Casa from '../../img/Casa.svg';
 import Outros from '../../img/Outros.svg';
 import Arrow from '../../img/Arrow_Right.svg';
 
+// Importando o Firebase
+import firebase from "../../firebase/firebaseConnection";
+
 export default function Explorar() {
     const navigation = useNavigation();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
+
+
+    useEffect(() => {
+        const fetchSearchResults = async () => {
+            try {
+                const snapshot = await firebase
+                    .database()
+                    .ref("lojas")
+                    .orderByChild("nome")
+                    .startAt(searchQuery.toLowerCase())
+                    .endAt(searchQuery.toLowerCase() + "\uf8ff")
+                    .once("value");
+
+                const results = [];
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    const uid = childSnapshot.key;
+
+                    // Certifique-se de que o UID do usuário da loja é uma propriedade
+                    if (data.uid) {
+                        results.push({ uid, ...data });
+                    }
+                });
+
+                setSearchResults(results);
+                setModalVisible(true);  // Abre o modal ao obter os resultados
+            } catch (error) {
+                console.error("Erro ao buscar resultados de pesquisa:", error);
+            }
+        };
+
+        if (searchQuery.trim() !== "") {
+            fetchSearchResults();
+        }
+    }, [searchQuery]);
 
     return (
         <SafeAreaView>
@@ -25,42 +66,68 @@ export default function Explorar() {
                 placeholder="Pesquisar"
                 placeholderTextColor='#C5C5C5'
                 style={styles.inputs}
+                onChangeText={(text) => setSearchQuery(text)}
+                value={searchQuery}
             />
             <Lupa style={{ top: -10, left: 50 }} />
             <View style={{ flexDirection: 'row', top: 30, left: 20 }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setSearchQuery("Lanches")}>
                     <Food />
                     <Text style={{ top: 5 }}>Lanches</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btns}>
+                <TouchableOpacity style={styles.btns} onPress={() => setSearchQuery("Farmácia")}>
                     <Farmacia />
                     <Text style={{ top: 5 }}>Farmácia</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btns}>
+                <TouchableOpacity style={styles.btns} onPress={() => setSearchQuery("Saúde & Bem-estar")}>
                     <Saude />
                     <Text style={{ top: 5, left: 1 }}>Saúde &</Text>
                     <Text style={{ top: 5, left: -5 }}>Bem-estar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.btns, { left: -8 }]}>
+                <TouchableOpacity style={[styles.btns, { left: -8 }]} onPress={() => setSearchQuery("Casa de Construção")}>
                     <Casa />
                     <Text style={{ top: 5, left: 4 }}>Casa de</Text>
                     <Text style={{ top: 5, left: -5 }}>Construção</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.btns, { left: -15 }]}>
+                <TouchableOpacity style={[styles.btns, { left: -15 }]} onPress={() => setSearchQuery("Outros Serviços")}>
                     <Outros />
                     <Text style={{ top: 5, left: 7 }}>Outros</Text>
                     <Text style={{ top: 5, left: 2 }}>Serviços</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.line}></View>
-            <Text style={{top: 35, left: 10}}>Ainda não há pedidos</Text>
+            <Text style={{ top: 35, left: 10 }}>Ainda não há pedidos</Text>
             <TouchableOpacity style={styles.orderButton}>
-                <Text style={{ color: '#C5C5C5', left: -15}}>Ir para os meus pedidos</Text>
-                <Arrow style={{left: 30}}/>
+                <Text style={{ color: '#C5C5C5', left: -15 }}>Ir para os meus pedidos</Text>
+                <Arrow style={{ left: 30 }} />
             </TouchableOpacity>
             <View style={styles.line}></View>
+            <Modal
+                animationType="slide"
+                transparent={false}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <SafeAreaView>
+                    <View>
+                        <Text style={{ fontSize: 24, textAlign: 'center', marginTop: 20 }}>Lojas Relacionadas</Text>
+                        <FlatList
+                            data={searchResults}
+                            keyExtractor={(item) => item.uid}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity>
+                                    <Text style={{ fontSize: 18, textAlign: 'center', marginTop: 10 }}>{item.nome}</Text>
+                                </TouchableOpacity>
+                            )}
+                        />
+                        <TouchableOpacity onPress={() => setModalVisible(false)}>
+                            <Text style={{ fontSize: 18, textAlign: 'center', color: 'blue', marginTop: 20 }}>Fechar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </SafeAreaView>
+            </Modal>
         </SafeAreaView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -101,4 +168,4 @@ const styles = StyleSheet.create({
     btns: {
         marginLeft: 15,
     },
-})
+});
