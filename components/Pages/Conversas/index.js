@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, Modal, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Arrow from '../../img/ArrowLeft.svg';
-
+import io from 'socket.io-client';
 // Importando o Firebase
 import firebase from "../../firebase/firebaseConnection";
 
@@ -21,21 +21,23 @@ export default function Conversas() {
 
             const lojasArray = [];
             snapshot.forEach((childSnapshot) => {
+                const uidLoja = childSnapshot.key; // Obtenha o UID da loja
                 const data = childSnapshot.val();
-                lojasArray.push(data);
+                lojasArray.push({ ...data, uid: uidLoja }); // Adicione o UID ao objeto da loja
             });
 
-            console.log("Lojas carregadas:", lojasArray); // Adicione este log
             setLojas(lojasArray);
-            console.log("Lojas atualizadas:", lojas); // Adicione este log
+            console.log("Lojas atualizadas:", lojasArray);
         } catch (error) {
             console.error("Erro ao carregar lojas:", error);
         }
     };
 
     const handleLojaPress = (nome, uidLoja) => {
-        console.log("UID da loja:", uidLoja); // Adicione este log
+        console.log("Início da função handleLojaPress - UID da loja:", uidLoja);
+
         if (uidLoja) {
+            console.log("Dados da loja:", nome, uidLoja); // Adicione este log
             // Navegar para o componente de bate-papo com o nome da loja e o UID como parâmetros
             navigation.navigate('BatePapo', { nomeLoja: nome, uidLoja: uidLoja });
             // Fechar o modal
@@ -76,7 +78,7 @@ export default function Conversas() {
                             <Text style={{ fontSize: 24, textAlign: 'center', marginTop: 20 }}>Escolha uma loja</Text>
                             <FlatList
                                 data={lojas}
-                                keyExtractor={(item, index) => index.toString()} // Alteração nesta linha
+                                keyExtractor={(item) => item.uid}
                                 renderItem={({ item }) => (
                                     <TouchableOpacity onPress={() => handleLojaPress(item.nome, item.uid)}>
                                         <Text style={{ fontSize: 18, textAlign: 'center', marginTop: 35, fontWeight: 'bold' }}>{item.nome}</Text>

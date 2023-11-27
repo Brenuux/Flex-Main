@@ -8,11 +8,18 @@ const BatePapo = ({ route }) => {
     const [mensagem, setMensagem] = useState('');
     const [mensagens, setMensagens] = useState([]);
     const [socket, setSocket] = useState(null);
+    const [uidCliente, setUidCliente] = useState(null);
 
     useEffect(() => {
         // Substitua 'http://SEU_SERVIDOR_SOCKET_IO' pelo endereço do seu servidor Socket.IO
         const socket = io('http://localhost:3000');
         setSocket(socket);
+
+        // Obtenha o usuário atualmente autenticado
+        const usuarioAtual = firebase.auth().currentUser;
+        if (usuarioAtual) {
+            setUidCliente(usuarioAtual.uid);
+        }
 
         return () => {
             // Desconecte o socket quando o componente for desmontado
@@ -44,6 +51,8 @@ const BatePapo = ({ route }) => {
         // Enviar a mensagem para a loja
         socket.emit('clienteParaLoja', { remetente: uidCliente, destinatario: uidLoja, mensagem });
 
+
+        console.log('Mensagem enviada:', mensagem);
         // Limpar o campo de mensagem após o envio
         setMensagem('');
     };
