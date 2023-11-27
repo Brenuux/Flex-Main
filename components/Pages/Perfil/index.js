@@ -10,7 +10,8 @@ import {
   Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 import firebase from "../../firebase/firebaseConnection";
 import UserP from "../../img/UserP.svg";
 import Ring from "../../img/Ring.svg";
@@ -49,16 +50,21 @@ export default function Perfil() {
   }, []);
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    if (!result.cancelled) {
-      setUserImage(result.uri);
-      uploadImage(result.uri);
+      if (!result.cancelled) {
+        setUserImage(result.uri);
+        uploadImage(result.uri);
+      }
+    } catch (error) {
+      console.error("Erro ao selecionar a imagem:", error);
+      // Você pode exibir um alerta ou realizar outras ações de tratamento de erro aqui
     }
   };
 
@@ -73,6 +79,18 @@ export default function Perfil() {
       console.log("Imagem enviada com sucesso!");
     });
   };
+
+  const requestNotificationPermission = async () => {
+    const { status } = await registerForPushNotificationsAsync();
+    if (status !== 'granted') {
+      Alert.alert(
+        "Permissões necessárias",
+        "Para receber notificações, por favor, habilite as permissões de notificação nas configurações do aplicativo.",
+        [{ text: "OK" }]
+      );
+    }
+  };
+
 
   return (
     <SafeAreaView>
@@ -112,7 +130,7 @@ export default function Perfil() {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btns}>
+        <TouchableOpacity style={styles.btns} onPress={requestNotificationPermission}>
           <View style={{ top: 10 }}>
             <Ring style={styles.icons} />
             <Text style={styles.textBtn}>Notificações</Text>
@@ -164,6 +182,24 @@ export default function Perfil() {
       </ScrollView>
     </SafeAreaView>
   )
+}
+async function registerForPushNotificationsAsync() {
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+
+  if (finalStatus !== 'granted') {
+    return;
+  }
+
+  const token = await Notifications.getExpoPushTokenAsync();
+  console.log(token);
+
+  // Aqui você enviaria o token para o seu servidor
 }
 
 const styles = StyleSheet.create({

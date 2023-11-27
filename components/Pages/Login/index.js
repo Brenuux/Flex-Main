@@ -58,10 +58,8 @@ export default function Login() {
 
             // Navega para o TabNavigator ou SecondTabNavigator com base no tipo de usuário
             if (isCliente) {
-              alert(`Bem-vindo Cliente: ${userName}`);
               navigation.navigate('TabNavigator');
             } else {
-              alert(`Bem-vindo Loja: ${userName}`);
               navigation.navigate('SecondTabNavigator');
             }
           })

@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, SafeAreaView, TouchableOpacity, TextInput, StyleSheet, Modal, FlatList} from "react-native";
 import Cart from '../../img/Cart.svg';
 import Lupa from '../../img/LupaCinza.svg';
 import { useNavigation } from "@react-navigation/native";
@@ -75,9 +75,6 @@ const styles = StyleSheet.create({
         paddingLeft: 55,
         fontSize: 20
     },
-    btns: {
-        marginLeft: 15,
-    },
     line: {
         height: 1,
         width: '100%',
@@ -100,5 +97,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         top: 40,
         flexDirection: "row"
-    }
+    },
+    btns: {
+        marginLeft: 15,
+    },
 })
