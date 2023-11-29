@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -44,6 +44,8 @@ export default function Produto() {
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
+        console.log('Permissão da galeria:', status);
+
         if (status !== 'granted') {
             console.error('A permissão de acesso à galeria foi negada!');
             return;
@@ -59,12 +61,21 @@ export default function Produto() {
 
             if (!result.cancelled) {
                 console.log('Resultado da seleção de imagem:', result);
+
+                // Atualiza o estado diretamente com o resultado
                 setProductImage(result.uri);
             }
         } catch (error) {
             console.error('Erro ao selecionar a imagem:', error);
         }
     };
+
+    // Adicione um useEffect para lidar com a atualização assíncrona do estado
+    useEffect(() => {
+        console.log('URI da imagem definida:', productImage);
+    }, [productImage]);
+
+
 
     const cadastrarProduto = async () => {
         try {
@@ -123,7 +134,7 @@ export default function Produto() {
                     </Text>
                 </View>
                 {productImage ? (
-                    <Image source={{ uri: productImage }} style={styles.productImage} />
+                    <Image source={{ uri: productImage }} style={{ width: 200, height: 200, alignSelf: "center", marginVertical: 10, borderRadius: 5 }} />
                 ) : (
                     <TouchableOpacity
                         style={styles.pickImageButton}
