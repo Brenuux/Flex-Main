@@ -16,6 +16,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [userName, setUserName] = useState('');
+  const [uidLoja, setUidLoja] = useState(null); // Adicione o estado para o UID da loja
 
   // Função para alternar a visibilidade da senha
   const togglePasswordVisibility = () => {
@@ -56,11 +57,16 @@ export default function Login() {
           .then((snapshot) => {
             const isCliente = snapshot.exists();
 
+            if (!isCliente) {
+              // Se não for cliente, é uma loja, então armazenamos o UID da loja
+              setUidLoja(user.uid);
+            }
+
             // Navega para o TabNavigator ou SecondTabNavigator com base no tipo de usuário
             if (isCliente) {
               navigation.navigate('TabNavigator');
             } else {
-              navigation.navigate('SecondTabNavigator');
+              navigation.navigate('SecondTabNavigator', { uidLoja }); // Passa o UID da loja como parâmetro
             }
           })
           .catch((error) => {

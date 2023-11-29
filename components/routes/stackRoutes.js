@@ -25,6 +25,7 @@ import Produto from '../Pages/Produto';
 import Estoque from '../Pages/Estoque';
 import Gerencia from '../Pages/Gerencia';
 import BatePapo from '../Pages/BatePapo';
+import Chat from '../Pages/BatePapo/Chat';
 
 // Cria uma instância do TabNavigator
 const Tab = createBottomTabNavigator();
@@ -62,6 +63,7 @@ function StackRoutes() {
       <Stack.Screen name="Estoque" component={Estoque} options={{ headerShown: false }} />
       <Stack.Screen name="Gerencia" component={Gerencia} options={{ headerShown: false }} />
       <Stack.Screen name="BatePapo" component={BatePapo} options={{ headerShown: false }} />
+      <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

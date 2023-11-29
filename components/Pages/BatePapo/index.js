@@ -5,7 +5,6 @@ import firebase from '../../firebase/firebaseConnection';
 import Cell from '../../img/Cell.svg';
 import Arrow from '../../img/ArrowLeft.svg';
 import ArrowD from '../../img/Arrow_Right.svg';
-import BalaoMensagem from './BalaoMensagem'; // Importe o novo componente
 import { useNavigation } from '@react-navigation/native';
 
 const BatePapo = ({ route }) => {
@@ -56,30 +55,42 @@ const BatePapo = ({ route }) => {
             }
         };
     }, [socket]);
-    const enviarMensagem = () => {
+    const enviarMensagem = async () => {
         if (mensagem.trim() === '' || !socket) {
-            return;
+          return;
         }
         const usuarioAtual = firebase.auth().currentUser;
-
+      
         // Se o usuário estiver logado, use o nome dele como remetente
         const nomeRemetente = usuarioAtual ? usuarioAtual.displayName : 'Nome Padrão';
-
-        socket.emit('clienteParaLoja', { remetente: "Você: ", destinatario: uidLoja, mensagem });
-
+      
+        try {
+          // Adicione a mensagem ao Firestore
+          await firebase.firestore().collection('mensagens').add({
+            remetente: nomeRemetente,
+            destinatario: uidLoja,
+            mensagem: mensagem,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+      
+          console.log('Mensagem enviada com sucesso para o Firestore.');
+        } catch (error) {
+          console.error('Erro ao enviar mensagem para o Firestore:', error);
+        }
+      
         // Adiciona a mensagem localmente ao estado
         setMensagens((prevMensagens) => [...prevMensagens, { remetente: "Você", texto: mensagem }]);
         // Mostra o balão
         setMostrarBalao(true);
-
+      
         // Limpa o campo de mensagem após o envio
         setMensagem('');
-    };
+      };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => navigation.navigate('SecondTabNavigator')}>
+                <TouchableOpacity onPress={() => navigation.navigate('TabNavigator')}>
                     <Arrow style={{ left: 20 }} />
                 </TouchableOpacity>
                 <Text style={{ fontSize: 30, left: 145, fontFamily: 'Segoe UI Bold' }}>FLEX</Text>

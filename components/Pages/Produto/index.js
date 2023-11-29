@@ -8,11 +8,13 @@ import {
     StyleSheet,
     SafeAreaView,
     ScrollView,
+    Image,
 } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
 import Arrow from "../../img/ArrowLeft.svg";
-import { useNavigation } from "@react-navigation/native";
 import Verificado from "../../img/Verificado.svg";
 import firebase from "firebase";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Produto() {
     const navigation = useNavigation();
@@ -21,6 +23,7 @@ export default function Produto() {
     const [descricaoProduto, setDescricaoProduto] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [productImage, setProductImage] = useState(null);
 
     const categories = [
         "Lanches",
@@ -35,6 +38,31 @@ export default function Produto() {
             setSelectedCategories(selectedCategories.filter((c) => c !== category));
         } else {
             setSelectedCategories([...selectedCategories, category]);
+        }
+    };
+
+    const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (status !== 'granted') {
+            console.error('A permissão de acesso à galeria foi negada!');
+            return;
+        }
+
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+
+            if (!result.cancelled) {
+                console.log('Resultado da seleção de imagem:', result);
+                setProductImage(result.uri);
+            }
+        } catch (error) {
+            console.error('Erro ao selecionar a imagem:', error);
         }
     };
 
@@ -61,6 +89,7 @@ export default function Produto() {
                 preco: precoProduto,
                 descricao: descricaoProduto,
                 categorias: selectedCategories,
+                imagem: productImage, // Adiciona a URL da imagem ao produto
             });
 
             // Limpa os campos após o cadastro
@@ -68,6 +97,7 @@ export default function Produto() {
             setPrecoProduto("");
             setDescricaoProduto("");
             setSelectedCategories([]);
+            setProductImage(null);
 
             // Fecha o modal
             setModalVisible(false);
@@ -92,8 +122,17 @@ export default function Produto() {
                         Novo produto
                     </Text>
                 </View>
+                {productImage ? (
+                    <Image source={{ uri: productImage }} style={styles.productImage} />
+                ) : (
+                    <TouchableOpacity
+                        style={styles.pickImageButton}
+                        onPress={pickImage}
+                    >
+                        <Text style={{ color: "#FFFFFF", fontSize: 16 }}>Adicionar Imagem</Text>
+                    </TouchableOpacity>
+                )}
 
-                {/* Nome do Produto */}
                 <TextInput
                     style={styles.input}
                     placeholder="Nome"
@@ -101,8 +140,6 @@ export default function Produto() {
                     onChangeText={(text) => setNomeProduto(text)}
                     value={nomeProduto}
                 />
-
-                {/* Preço do Produto */}
                 <TextInput
                     style={styles.input}
                     placeholder="Preço"
@@ -110,7 +147,6 @@ export default function Produto() {
                     onChangeText={(text) => setPrecoProduto(text)}
                     value={precoProduto}
                 />
-
                 <TouchableOpacity
                     style={{
                         flexDirection: "row",
@@ -128,7 +164,6 @@ export default function Produto() {
                     </Text>
                 </TouchableOpacity>
 
-                {/* Descrição do Produto */}
                 <TextInput
                     style={styles.descricaoInput}
                     placeholder="Descrição"
@@ -138,14 +173,12 @@ export default function Produto() {
                     multiline={true}
                 />
 
-                {/* Botão Cadastrar */}
                 <TouchableOpacity style={styles.btnCadastrar} onPress={cadastrarProduto}>
                     <Text style={{ color: "#FFFFFF", fontSize: 18, textAlign: "center" }}>
                         Cadastrar
                     </Text>
                 </TouchableOpacity>
 
-                {/* Modal de Categorias */}
                 <Modal
                     transparent={true}
                     animationType="slide"
@@ -223,6 +256,25 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         top: 60,
         justifyContent: "center",
+    },
+    pickImageButton: {
+        width: 325,
+        height: 51,
+        borderWidth: 1,
+        backgroundColor: "#828282",
+        alignSelf: "center",
+        top: 60,
+        marginBottom: 20,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 5,
+    },
+    productImage: {
+        width: 325,
+        height: 200,
+        alignSelf: "center",
+        marginVertical: 10,
+        borderRadius: 5,
     },
     modalContainer: {
         flex: 1,

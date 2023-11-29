@@ -116,7 +116,7 @@ export default function Perfil() {
               fontSize: 20,
               fontFamily: "Segoe UI Bold",
               top: 66,
-              left: 177,
+              alignSelf: 'center'
             }}
           >
             {userName}

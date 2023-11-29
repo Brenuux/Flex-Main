@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import 'firebase/auth';
 import 'firebase/database';
 import  'firebase/storage';
-
+import 'firebase/firestore';
 // Configuração do Firebase com as credenciais do projeto Firebase
 let firebaseConfig = {
     apiKey: "AIzaSyBwsCzRYQRMjG3bSwp1rhoMShESS8fmnoE",

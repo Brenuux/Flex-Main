@@ -1,5 +1,5 @@
 package com.heitor.effiagro;
-
+import com.imagepicker.ImagePickerPackage;
 import android.app.Application;
 import android.content.res.Configuration;
 import androidx.annotation.NonNull;
@@ -56,6 +56,13 @@ public class MainApplication extends Application implements ReactApplication {
   public ReactNativeHost getReactNativeHost() {
     return mReactNativeHost;
   }
+
+  protected List<ReactPackage> getPackages() {
+  return Arrays.<ReactPackage>asList(
+    new MainReactPackage(),
+    new ImagePickerPackage() // Adicione esta linha
+  );
+}
 
   @Override
   public void onCreate() {
